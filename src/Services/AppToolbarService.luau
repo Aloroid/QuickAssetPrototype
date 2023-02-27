@@ -24,7 +24,7 @@ local AppToolbarService = CubeCat.CreateService({
 local toolbar
 function AppToolbarService:GetToolbar()
 	if toolbar then return toolbar end
-	toolbar = plugin:CreateToolbar("QuickProto")
+	toolbar = plugin:CreateToolbar("QuickAssetProto")
 	
 	return toolbar
 end
@@ -59,7 +59,7 @@ function AppToolbarService:Init()
 		"New Item",
 		"Opens the widget for viewing all assets",
 		"",
-		"Open QuickProto"
+		"Open"
 	)
 	
 	local widget = AppToolbarService:GetWidget()
