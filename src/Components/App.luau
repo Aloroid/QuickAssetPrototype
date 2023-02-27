@@ -69,6 +69,8 @@ local function App(props: App)
 							Size = UDim2.new(1, 0, 0, 0),
 							AutomaticSize = Enum.AutomaticSize.Y,
 							
+							LayoutOrder = 2,
+							
 							NoPadding = true,
 							NoList = true,
 							
@@ -148,7 +150,7 @@ local function App(props: App)
 									Size = UDim2.new(1, -92, 0, 30),
 									
 									Disabled = true,
-									Text = file:GetTemporaryId()
+									Text = file.Id
 								},
 								Button {
 									Text = "Change File",
