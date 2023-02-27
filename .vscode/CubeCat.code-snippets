@@ -1,0 +1,103 @@
+{
+	// Place your ItemPluginV3 workspace snippets here. Each snippet is defined under a snippet name and has a scope, prefix, body and 
+	// description. Add comma separated ids of the languages where the snippet is applicable in the scope field. If scope 
+	// is left empty or omitted, the snippet gets applied to all languages. The prefix is what is 
+	// used to trigger the snippet and the body will be expanded and inserted. Possible variables are: 
+	// $1, $2 for tab stops, $0 for the final cursor position, and ${1:label}, ${2:another} for placeholders. 
+	// Placeholders with the same ids are connected.
+	// Example:
+	// "Print to console": {
+	// 	"scope": "javascript,typescript",
+	// 	"prefix": "log",
+	// 	"body": [
+	// 		"console.log('$1');",
+	// 		"$2"
+	// 	],
+	// 	"description": "Log output to console"
+	// }
+	
+	"CubeCat Service": {
+		"scope": "lua, luau",
+		"prefix": "cervice",
+		"body": [
+			"local Plugin = script.Parent.Parent",
+			"local Services = Plugin.Services",
+			"local Packages = Plugin.Packages",
+			"local Modules = Plugin.Modules",
+			"",
+			"local CubeCat = require(Packages.CubeCat)",
+			"",
+			"local ${1:$TM_FILENAME_BASE} = CubeCat.CreateService({",
+			"\tName = \"$1\",",
+			"\tPublic = {}",
+			"})",
+			"",
+			"function $1:Init()",
+			"\t$0",
+			"\t",
+			"end",
+			"",
+			"",
+			"return $1"
+			
+		]
+		
+	},
+	
+	"Fusion Component": {
+		"scope": "lua,luau",
+		"prefix": "fusionComponent",
+		"body": [
+			
+			"local Plugin = script.Parent.Parent",
+			"local Services = Plugin.Services",
+			"local Packages = Plugin.Packages",
+			"local Modules = Plugin.Modules",
+			"",
+			"local Fusion = require(Packages.Fusion)",
+			"local CubeCat = require(Packages.CubeCat)",
+			"",
+			"local New = Fusion.New",
+			"local Value = Fusion.Value",
+			"local Computed = Fusion.Computed",
+			"local Children = Fusion.Children",
+			"local OnEvent = Fusion.OnEvent",
+			"local Spring = Fusion.Spring",
+			"",
+			"local Theme = CubeCat.Util.Theme",
+			"local unwrap = CubeCat.Util.unwrap",
+			"local stripProps = CubeCat.Util.stripProps",
+			"",
+			"type CanBeState<T> = Fusion.CanBeState<T>",
+			"export type ${1:$TM_FILENAME_BASE} = {",
+			"\tPosition: CanBeState<UDim2>?,",
+			"\tSize: CanBeState<UDim2>?,",
+			"\tAnchorPoint: CanBeState<Vector2>?,",
+			"\t",
+			"\t$2",
+			"",
+			"\t[any]: any",
+			"}",
+			"",
+			"local COMPONENT_ONLY_PROPERTIES = {",
+			"\t",
+			"\t",
+			"}",
+			"",
+			"local function $1(props: $1)",
+			"\t",
+			"\tlocal $1 = $0",
+			"\t",
+			"\t",
+			"\treturn Fusion.Hydrate($1)(stripProps(props, COMPONENT_ONLY_PROPERTIES))",
+			"\t",
+			"end",
+			"",
+			"return $1"
+			
+		],
+		"description": "Creates the template for a Fusion component"
+		
+	}
+	
+}

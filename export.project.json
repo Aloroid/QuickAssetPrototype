@@ -1,0 +1,24 @@
+{
+	
+	"name": "your-project-name",
+	
+	"tree": {
+		"$className": "DataModel",
+		
+		"ServerStorage": {
+			
+			"QuickLoad": {
+				
+				"$path": "src",
+			
+				"Packages": {
+					"$path": "Packages"
+				}
+				
+			}
+			
+		}
+		
+	}
+	
+}
