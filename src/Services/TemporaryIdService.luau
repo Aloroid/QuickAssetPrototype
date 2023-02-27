@@ -4,6 +4,7 @@
 
 local StudioService = game:GetService("StudioService")
 
+local plugin = script:FindFirstAncestorWhichIsA("Plugin")
 local Plugin = script.Parent.Parent
 local Services = Plugin.Services
 local Packages = Plugin.Packages
@@ -21,11 +22,14 @@ local TemporaryIdService = CubeCat.CreateService({
 })
 
 local ALLOWED_FILE_TYPES = {
-	Both = {"png", "mp3", "ogg"},
+	Both = {"png", "mp3", "ogg", "mesh"},
 	Image = {"png", "tga", "bmp"},
 	Sound = {"mp3", "ogg"},
-	--Video = {"mp4", "mov", "webm", "mkv"} // Video currently cannot be played inside Roblox when loaded from a rbxtemp://
+	Mesh = {"mesh"} -- Roblox uses their own proprietary mesh format.
+	
 }
+
+TemporaryIdService.Extensions = ALLOWED_FILE_TYPES
 
 function TemporaryIdService:Init()
 	
@@ -43,19 +47,33 @@ function TemporaryIdService:IsChanged()
 	return false
 end
 
-function TemporaryIdService:RequestId(type: "Image" | "Sound", key: string)
+function TemporaryIdService:RequestId(type: "Image" | "Sound" | "Mesh" | "Both", key: string)
 	
 	local file: File = StudioService:PromptImportFile(ALLOWED_FILE_TYPES[type])
 	if file == nil then return end
 	
+	return TemporaryIdService:AddId({
+		Id = file:GetTemporaryId(),
+		Name = file.Name,
+		Key = key,
+	})
+	
+end
+
+function TemporaryIdService:AddId(fileData)
+	
+	local key = fileData.Key
+	
 	local previousFile = TemporaryIdService.Ids[key]
-	TemporaryIdService.Ids[key] = file
+	TemporaryIdService.Ids[key] = fileData
 	
 	idChanged = true
 	
-	if previousFile == nil then return file:GetTemporaryId() end
-	local oldId = previousFile:GetTemporaryId()
-	local newId = file:GetTemporaryId()
+	plugin:SetSetting("TemporaryFileIds", TemporaryIdService.Ids)
+	
+	if previousFile == nil then return fileData.Id end
+	local oldId = previousFile.Id
+	local newId = fileData.Id
 	
 	FindAndReplaceService:Replace(oldId, newId)
 	
