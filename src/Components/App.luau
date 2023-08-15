@@ -24,10 +24,12 @@ local Runtime = CubeCat.Runtime
 local New = Fusion.New
 local Value = Fusion.Value
 local OnEvent = Fusion.OnEvent
+local Computed = Fusion.Computed
 local ForPairs = Fusion.ForPairs
 local Children = Fusion.Children
 
 local Theme = CubeCat.Util.Theme
+local unwrap = CubeCat.Util.unwrap
 local stripProps = CubeCat.Util.stripProps
 
 type CanBeState<T> = Fusion.CanBeState<T>
@@ -59,6 +61,8 @@ local function App(props: App)
 			ForPairs(ids, function(key, file)
 				
 				local hovering = Value(false)
+				local double_clicked = false
+				local renaming = Value(false)
 				
 				return key, Pane {
 					
@@ -69,20 +73,63 @@ local function App(props: App)
 							Size = UDim2.new(1, 0, 0, 0),
 							AutomaticSize = Enum.AutomaticSize.Y,
 							
-							LayoutOrder = 2,
-							
 							NoPadding = true,
 							NoList = true,
 							
 							[Children] = {
-								Text {
-									Size = UDim2.new(1, -24, 0, 0),
-									AutomaticSize = Enum.AutomaticSize.Y,
-									
-									Text = key,
-									TextTruncate = Enum.TextTruncate.AtEnd,
-									TextXAlignment = Enum.TextXAlignment.Left
-								},
+
+								Computed(function()
+
+									if not unwrap(renaming) then
+										return Text {
+											Size = UDim2.new(1, -32, 0, 0),
+											AutomaticSize = Enum.AutomaticSize.Y,
+											
+											Text = key,
+											TextTruncate = Enum.TextTruncate.AtEnd,
+											TextXAlignment = Enum.TextXAlignment.Left,
+		
+											[OnEvent "InputBegan"] = function(input: InputObject)
+												if input.UserInputType ~= Enum.UserInputType.MouseButton1 then return end
+
+												if double_clicked == false then
+													double_clicked = true
+													task.wait(0.5)
+													double_clicked = false
+												else
+													double_clicked = false
+													renaming:set(true)
+												end
+											end
+										}
+									else
+
+										local renamingTo = Value(key)
+
+										return TextInput {
+
+											Size = UDim2.new(1, -32, 0, 24),
+											Position = UDim2.fromScale(0, 0.5),
+											AnchorPoint = Vector2.new(0, 0.5),
+											AutomaticSize = Enum.AutomaticSize.Y,
+											
+											Text = renamingTo,
+											ErrorLocation = "Bottom",
+		
+											FocusLost = function(enterPressed)
+
+												if enterPressed == true then
+													TemporaryIdService:Rename(key, unwrap(renamingTo))
+												end
+
+												renaming:set(false)
+												
+											end,
+
+										}
+									end
+
+								end, Fusion.cleanup),
 								
 								Button {
 									Position = UDim2.fromScale(1, .5),

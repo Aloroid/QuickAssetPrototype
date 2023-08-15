@@ -81,6 +81,19 @@ function TemporaryIdService:AddId(fileData)
 	
 end
 
+function TemporaryIdService:Rename(keyFrom: string, keyTo: string)
+
+	TemporaryIdService.Ids[keyTo] = TemporaryIdService.Ids[keyFrom]
+	TemporaryIdService.Ids[keyFrom] = nil
+
+	TemporaryIdService.Ids[keyTo].Key = keyTo
+
+	idChanged = true
+
+	plugin:SetSetting("TemporaryFileIds", TemporaryIdService.Ids)
+
+end
+
 function TemporaryIdService:Remove(key: string)
 	idChanged = true
 	TemporaryIdService.Ids[key] = nil

@@ -35,7 +35,7 @@ function AppToolbarService:GetWidget()
 	
 	local guiInfo = DockWidgetPluginGuiInfo.new(
 		Enum.InitialDockState.Float,
-		true,
+		false,
 		false,
 		256+16,
 		400,
@@ -50,9 +50,6 @@ function AppToolbarService:GetWidget()
 end
 
 function AppToolbarService:Init()
-	
-	if RunService:IsRunning() then return end
-	--if true then return end -- currently not used
 	
 	local toolbar = AppToolbarService:GetToolbar()
 	local button = toolbar:CreateButton(
